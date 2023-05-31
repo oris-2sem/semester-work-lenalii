@@ -1,0 +1,149 @@
+<!doctype html>
+<html class="no-js" lang="en" xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Vacancies</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" th:href="@{/css/plugins.css}">
+
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+
+</head>
+
+<body>
+
+<div th:insert="page-template :: navbar"></div>
+
+<section class="main-banner" style="background:#242c36">
+    <div class="container">
+        <div class="caption">
+            <h2>Build Your Career</h2>
+            <form th:action="@{/vacancy/by/filter}" th:method="post">
+                <fieldset>
+                    <div class="col-md-4 col-sm-4 no-pad">
+                        <input type="text" class="form-control border-right" placeholder="name"
+                               th:field="*{filter.name}"/>
+                    </div>
+                    <div class="col-md-4 col-sm-4 no-pad">
+
+                        <input type="text" class="form-control border-right" placeholder="city"
+                               th:field="*{filter.city}"/>
+
+                    </div>
+                    <div class="col-md-4 col-sm-4 no-pad">
+
+                        <select class="vacancy-update search-filter form-control border-right" id="sortType"
+                                name="sortType" placeholder="sort type" th:field="*{filter.sortType}">
+                            <option value="ASC">По возрастанию</option>
+                            <option value="DESC">По убыванию</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4 col-sm-4 no-pad">
+
+                        <select class="vacancy-update search-filter form-control border-right" id="sortBy"
+                                name="sortBy" placeholder="sort by" th:field="*{filter.sortBy}">
+                            <option value="createdDate">По дате добавления</option>
+                            <option value="salary">По зарплате</option>
+                        </select>
+
+                    </div>
+                    <div class="col-md-4 col-sm-4 no-pad">
+                        <input type="text" class="form-control border-right" placeholder="min salary"
+                               th:field="*{filter.minSalary}"/>
+                    </div>
+                    <div class="col-md-4 col-sm-4 no-pad">
+                        <input type="text" class="form-control border-right" placeholder="max salary"
+                               th:field="*{filter.maxSalary}"/>
+                    </div>
+                    <div class="col-md-2 col-sm-2 no-pad">
+                        <input type="submit" class="btn seub-btn" value="submit"/>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+    </div>
+</section>
+
+<section class="jobs">
+    <div class="container">
+        <div class="row heading">
+            <h2>Найденные вакансии</h2>
+            <p>Мы верим, что у вас все получится</p>
+        </div>
+        <div class="companies" th:each="vacancy : ${vacancyPage.content}">
+            <div class="company-list">
+                <div class="row">
+                    <div class="col-md-1 col-sm-1">
+                    </div>
+                    <div class="col-md-10 col-sm-10">
+                        <a th:href="${'/vacancy/'+ vacancy.id}">
+                            <div class="company-content link-container">
+
+
+                                <div class="elements">
+                                    <h3><span class="salary" th:text="${vacancy.salary}"></span></h3>
+                                    <h3><span th:if="${vacancy.remote==true}" class="full-time">Remote
+                                   </span></h3></div>
+
+                                <h3 th:text="${vacancy.name}">
+
+                                </h3>
+                                <span th:each="tag, iterStat : ${vacancy.tags}">
+                                <span class="tag-list" th:text="${tag.tag}"></span>
+                                <span th:unless="${iterStat.last}">, </span>
+                            </span>
+
+                                <p><span class="company-name"><i class="fa fa-briefcase"
+                                                                 th:text="${vacancy.city}"></i></span><span
+                                        class="company-location"><i class="fa fa-map-marker"
+                                                                    th:text="${vacancy.address}"></i></span>
+                                </p>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div th:if="${vacancyPage.totalPages > 1 && vacancyPage.pageable.pageNumber<vacancyPage.totalPages}">
+            <ul class="pagination">
+
+                <li>
+                    <div th:with="pageNum=${vacancyPage.pageable.pageNumber+1}">
+
+                        <a th:href="${vacancyPage.totalPages == 0 ? '/vacancy' : '/vacancy?number=' + pageNum}">next</a>
+                    </div>
+                </li>
+
+            </ul>
+        </div>
+        <div th:if="${vacancyPage.totalPages > 1 && vacancyPage.pageable.pageNumber>0}">
+            <ul class="pagination">
+
+                <li>
+                    <div th:with="pageNum=${vacancyPage.pageable.pageNumber-1}">
+
+                        <a th:href="${vacancyPage.totalPages == 0 ? '/vacancy' : '/vacancy?number=' + pageNum}">next</a>
+                    </div>
+                </li>
+
+            </ul>
+        </div>
+    </div>
+</section>
+
+
+<div th:insert="page-template :: end"></div>
+<script type="text/javascript" th:src="@{/js/account.js}"></script>
+<script type="text/javascript" th:src="@{/js/jquery.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/bootstrap.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/owl.carousel.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/bootsnav.js}"></script>
+<script type="text/javascript" th:src="@{/js/main.js}"></script>
+<script type="text/javascript" th:src="@{/js/vacancy.js}"></script>
+</body>
+</html>

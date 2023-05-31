@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Edit information</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" th:href="@{/css/plugins.css}">
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+
+
+</head>
+
+<body>
+<div th:insert="page-template :: navbar"></div>
+
+<section class="inner-banner" style="backend:#242c36 url(https://via.placeholder.com/1920x600)no-repeat;">
+    <div class="container">
+        <div class="caption">
+            <h2>Get your jobs</h2>
+            <p>Get your Popular jobs <span>New job</span></p>
+        </div>
+    </div>
+</section>
+
+
+<section class="profile-detail">
+    <div class="container">
+        <div class="col-md-12">
+            <div class="row">
+                <div class="basic-information">
+                    <div class="col-md-3 col-sm-3">
+
+                        <div th:if="${hrResponse.photo==null}">
+                            <img th:src="@{/image/default-account-image.png}" class="img-responsive">
+                            <div id="menu-add-photo" class="menu">
+
+                                <form action="/photo" method="post" enctype="multipart/form-data">
+                                    <label for="photo" class="button-file-upload">Выбрать файл</label>
+                                    <input type="file" id="photo" name="file" required>
+                                    <br>
+                                    <button class="block-upload-file" type="submit" name="submit">Добавить фото
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                        <div th:if="${hrResponse.photo!=null}">
+                            <img th:src="${hrResponse.photo.link}" class="img-responsive" onclick="openMenu()"/>
+                            <div id="menu" class="menu" style="display: none">
+                                <form action="/photo" method="post" enctype="multipart/form-data">
+                                    <input type="hidden" name="_method" value="DELETE"/>
+                                    <button class="block-upload-file" type="submit" name="submit">Удалить фото
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+
+                    </div>
+                    <form th:method="post" th:action="@{/hr}" th:object="${updateHrRequest}">
+                        <input type="hidden" name="_method" value="PATCH"/>
+                            <div class="col-md-9 col-sm-9">
+                                <div class="profile-content hr-content">
+                                    <ul class="information">
+                                        <li><span>Имя:</span>
+                                            <input class="vacancy-update" style="display: inline-block"
+                                                   th:field="*{firstName}"/>
+                                            <span class="error-message" th:if="${#fields.hasErrors('firstName')}"
+                                                  th:errors="*{firstName}">Error</span>
+                                        </li>
+                                        <li><span>Фамилия:</span>
+                                            <input class="vacancy-update" style="display: inline-block"
+                                                   th:field="*{lastName}" id="lastName"/>
+                                            <span class="error-message" th:if="${#fields.hasErrors('lastName')}"
+                                                  th:errors="*{lastName}">Error</span>
+                                        </li>
+                                        <li><span>Город:</span>
+                                            <input class="vacancy-update" style="display: inline-block"
+                                                   th:field="*{city}" id="city"/>
+                                            <span class="error-message" th:if="${#fields.hasErrors('lastName')}"
+                                                  th:errors="*{lastName}">Error</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                        <div class="block-update-hr">
+                            <input class="block-upload-file send-update-form" type="submit" value="update"/>
+                        </div>
+                    </form>
+
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+<div th:insert="page-template :: end"></div>
+<script>
+    function displayFileName() {
+        var fileInput = document.getElementById("file");
+        var fileNameElement = document.getElementById("file-name");
+
+        if (fileInput.files.length > 0) {
+            fileNameElement.textContent = "Selected file: " + fileInput.files[0].name;
+        } else {
+            fileNameElement.textContent = "";
+        }
+    }
+</script>
+<script type="text/javascript" th:src="@{/js/account.js}"></script>
+<script type="text/javascript" th:src="@{/js/company.js}"></script>
+<script type="text/javascript" th:src="@{/js/developer.js}"></script>
+<script type="text/javascript" th:src="@{/js/vacancy.js}"></script>
+<script type="text/javascript" th:src="@{/js/jquery.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/bootstrap.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/owl.carousel.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/bootsnav.js}"></script>
+<script type="text/javascript" th:src="@{/js/main.js}"></script>
+</body>
+</html>

@@ -1,0 +1,84 @@
+POST http://localhost:8080/login
+Content-Type: application/json
+
+{
+  "email": "admin@gmail.com",
+  "password": "qwerty007"
+}
+###
+
+POST http://localhost:8080/company
+Content-Type: application/json
+
+{
+  "name": "Developers4",
+  "description": "Мы работаем каждый день",
+  "websiteLink": "http://our-site",
+  "email": "company@gmail.com",
+  "type": "OOO"
+}
+###
+
+PATCH http://localhost:8080/company
+Content-Type: application/json
+
+{
+  "id": "a3ac68c5-4f3b-4cc8-9225-ca4f201efb76",
+  "name": "Разработчики2",
+  "description": "Мы работаем не каждый день",
+  "type": "OOO"
+}
+
+###
+DELETE http://localhost:8080/company
+Content-Type: application/json
+
+{
+  "id": "a3ac68c5-4f3b-4cc8-9225-ca4f201efb76"
+}
+
+###
+GET http://localhost:8080/company/9b83a21f-98d8-4ccb-a42d-b2afcd4e8753
+Content-Type: application/json
+
+###
+GET  http://localhost:8080/company/confirmed
+Content-Type: application/json
+
+###
+GET  http://localhost:8080/company/by/name?query=Dev
+Content-Type: application/json
+
+###
+GET http://localhost:8080/company
+Content-Type: application/json
+
+
+###
+POST http://localhost:8080/login
+Content-Type: application/json
+
+{
+  "email": "moderator1@gmail.com",
+  "password": "qwerty007"
+}
+
+###
+PATCH http://localhost:8080/company/confirm
+Content-Type: application/json
+
+{
+  "id": "03faf2df-1f92-4049-95c0-fcdc26fbd8f8"
+}
+
+###
+PATCH http://localhost:8080/company/block
+Content-Type: application/json
+
+{
+  "id": "03faf2df-1f92-4049-95c0-fcdc26fbd8f8"
+}
+
+###
+GET http://localhost:8080/company/moderated
+Content-Type: application/json

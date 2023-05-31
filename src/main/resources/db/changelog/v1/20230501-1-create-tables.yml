@@ -1,0 +1,473 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: Liphen Elena
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: pk_account
+                  name: id
+                  type: UUID
+              - column:
+                  constraints:
+                    nullable: false
+                  name: created_date
+                  type: timestamptz(6)
+                  defaultValueDate: CURRENT_TIMESTAMPTZ
+              - column:
+                  name: updated_date
+                  type: timestamp with time zone
+                  defaultValueDate: CURRENT_TIMESTAMP
+              - column:
+                  name: email
+                  type: VARCHAR(255)
+              - column:
+                  name: hash_password
+                  type: VARCHAR(255)
+              - column:
+                  name: first_name
+                  type: VARCHAR(255)
+              - column:
+                  name: last_name
+                  type: VARCHAR(255)
+              - column:
+                  name: status
+                  type: VARCHAR(255)
+              - column:
+                  name: role
+                  type: VARCHAR(255)
+            tableName: account
+        - createTable:
+            tableName: hr
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: company_id
+                  type: UUID
+              - column:
+                  name: city
+                  type: varchar(255)
+        - createTable:
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: date_of_birth
+                  type: date
+              - column:
+                  name: work_experience
+                  type: int
+              - column:
+                  name: city
+                  type: varchar(100)
+              - column:
+                  name: state
+                  type: varchar(20)
+              - column:
+                  name: username
+                  type: varchar(20)
+            tableName: developer
+  - changeSet:
+      id: 2
+      author: Liphen Elena
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: id
+            baseTableName: hr
+            constraintName: fk_hr_id
+            referencedColumnNames: id
+            referencedTableName: account
+        - addForeignKeyConstraint:
+            baseColumnNames: id
+            baseTableName: developer
+            constraintName: fk_developer_id
+            referencedColumnNames: id
+            referencedTableName: account
+  - changeSet:
+      id: 3
+      author: Liphen Elena
+      changes:
+        - createTable:
+            tableName: specialization
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: pk_specialization
+                  #defaultValue: gen_random_uuid()
+              - column:
+                  name: developer_id
+                  type: UUID
+              - column:
+                  name: name
+                  type: varchar(20)
+        - addForeignKeyConstraint:
+            baseTableName: specialization
+            baseColumnNames: developer_id
+            referencedTableName: developer
+            constraintName: fr_developer_id
+            referencedColumnNames: id
+  - changeSet:
+      id: 4
+      author: Liphen Elena
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_refresh_token
+                  name: id
+                  type: UUID
+              - column:
+                  constraints:
+                    nullable: false
+                  name: created_date
+                  type: timestamp with time zone
+                  defaultValueDate: CURRENT_TIMESTAMPTZ
+              - column:
+                  name: value
+                  type: VARCHAR(255)
+              - column:
+                  name: account_id
+                  type: UUID
+            tableName: refresh_token
+  - changeSet:
+      id: 5
+      author: Liphen Elena
+      changes:
+        - createTable:
+            tableName: confirmation_token
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_confirmation_token
+                  name: token
+                  type: UUID
+              - column:
+                  name: created_date
+                  type: timestamp with time zone
+              - column:
+                  name: expired_date
+                  type: timestamp with time zone
+              - column:
+                  name: account_id
+                  type: UUID
+  - changeSet:
+      id: 6
+      author: Liphen Elena
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: account_id
+            baseTableName: confirmation_token
+            constraintName: fk_confirmation_token_id
+            referencedColumnNames: id
+            referencedTableName: account
+            onDelete: cascade
+  - changeSet:
+      id: 7
+      author: Liphen Elena
+      changes:
+        - modifyDataType:
+            columnName: value
+            newDataType: varchar(1000)
+            schemaName: public
+            tableName: refresh_token
+  - changeSet:
+      id: 8
+      author: Liphen Elena
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: refresh_token
+            baseColumnNames: account_id
+            referencedColumnNames: id
+            referencedTableName: account
+            constraintName: fr_account_id
+  - changeSet:
+      id: 9
+      author: Liphen Elena
+      changes:
+        - createTable:
+            tableName: photo
+            columns:
+              - column:
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: pk_photo
+                  name: id
+                  type: UUID
+              - column:
+                  name: account_id
+                  type: UUID
+              - column:
+                  name: file_name
+                  type: varchar(100)
+              - column:
+                  name: file_name_in_bucket
+                  type: varchar(100)
+              - column:
+                  name: size
+                  type: double precision
+              - column:
+                  name: type
+                  type: varchar(10)
+  - changeSet:
+      id: 10
+      author: Liphen Elena
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: photo
+            baseColumnNames: account_id
+            referencedColumnNames: id
+            referencedTableName: account
+            constraintName: fk_account_id
+  - changeSet:
+      id: 11
+      author: Liphen Elena
+      changes:
+        - addColumn:
+            tableName: account
+            columns:
+              - column:
+                  name: redis_id
+                  type: varchar(255)
+  - changeSet:
+      id: 12
+      author: Liphen Elena
+      changes:
+        - createTable:
+            tableName: company
+            columns:
+              - column:
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: pk_company
+                  name: id
+                  type: UUID
+              - column:
+                  name: name
+                  type: varchar(50)
+              - column:
+                  name: description
+                  type: varchar(10000)
+              - column:
+                  name: website_link
+                  type: varchar(50)
+              - column:
+                  name: email
+                  type: varchar(50)
+              - column:
+                  name: type
+                  type: varchar(50)
+              - column:
+                  name: status
+                  type: varchar(20)
+              - column:
+                  constraints:
+                    nullable: false
+                  name: created_date
+                  type: timestamptz(6)
+                  defaultValueDate: CURRENT_TIMESTAMPTZ
+              - column:
+                  name: updated_date
+                  type: timestamp with time zone
+                  defaultValueDate: CURRENT_TIMESTAMP
+  - changeSet:
+      id: 13
+      author: liphen Elena
+      changes:
+        - createTable:
+            tableName: vacancy
+            columns:
+              - column:
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: pk_vacancy
+                  name: id
+                  type: UUID
+              - column:
+                  name: description
+                  type: varchar(10000)
+              - column:
+                  name: hr_id
+                  type: uuid
+              - column:
+                  name: city
+                  type: varchar(50)
+              - column:
+                  name: salary
+                  type: numeric
+              - column:
+                  name: address
+                  type: varchar(50)
+              - column:
+                  name: name
+                  type: varchar(50)
+              - column:
+                  name: remote
+                  type: bool
+              - column:
+                  constraints:
+                    nullable: false
+                  name: created_date
+                  type: timestamptz(6)
+                  defaultValueDate: CURRENT_TIMESTAMPTZ
+              - column:
+                  name: updated_date
+                  type: timestamp with time zone
+                  defaultValueDate: CURRENT_TIMESTAMP
+              - column:
+                  name: status
+                  type: varchar(10)
+  - changeSet:
+      id: 14
+      author: Liphen Elena
+      changes:
+        - createTable:
+            tableName: tag
+            columns:
+              - column:
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: pk_tag
+                  name: id
+                  type: UUID
+              - column:
+                  name: vacancy_id
+                  type: uuid
+              - column:
+                  name: tag
+                  type: varchar(20)
+  - changeSet:
+      id: 16
+      author: Liphen Elena
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: tag
+            baseColumnNames: vacancy_id
+            constraintName: fk_vacancy_id
+            referencedTableName: vacancy
+            referencedColumnNames: id
+  - changeSet:
+      id: 17
+      author: Liphen Elena
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: vacancy
+            baseColumnNames: hr_id
+            constraintName: fk_hr_id
+            referencedTableName: hr
+            referencedColumnNames: id
+  - changeSet:
+      id: 18
+      author: Liphen Elena
+      changes:
+        - createTable:
+            tableName: vacancy_developer
+            columns:
+              - column:
+                  name: vacancy_id
+                  type: uuid
+              - column:
+                  name: developer_id
+                  type: uuid
+  - changeSet:
+      id: 19
+      author: Liphen Elena
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: hr
+            baseColumnNames: company_id
+            referencedTableName: company
+            referencedColumnNames: id
+            constraintName: fk_company_id
+  - changeSet:
+      id: 20
+      author: Liphen Elena
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: vacancy_id
+            baseTableName: vacancy_developer
+            referencedTableName: vacancy
+            referencedColumnNames: id
+            constraintName: fk_vacancy_id
+  - changeSet:
+      id: 21
+      author: Liphen Elena
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: vacancy_developer
+            baseColumnNames: developer_id
+            referencedTableName: developer
+            referencedColumnNames: id
+            constraintName: fk_developer_id
+  - changeSet:
+      id: 22
+      author: Liphen Elena
+      changes:
+        - addColumn:
+            tableName: vacancy
+            columns:
+              - column:
+                  name: company_id
+                  type: uuid
+        - addForeignKeyConstraint:
+            baseColumnNames: company_id
+            baseTableName: vacancy
+            referencedTableName: company
+            referencedColumnNames: id
+            constraintName: fk_company_id
+  - changeSet:
+      id: 23
+      author: Liphen Elena
+      changes:
+        - createTable:
+            tableName: document
+            columns:
+              - column:
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: pk_document
+                  name: id
+                  type: UUID
+                  #defaultValue: gen_random_uuid()
+              - column:
+                  name: developer_id
+                  type: UUID
+              - column:
+                  name: file_name_in_bucket
+                  type: varchar(100)
+              - column:
+                  name: file_name
+                  type: varchar(100)
+              - column:
+                  name: size
+                  type: numeric
+              - column:
+                  name: type
+                  type: varchar(100)
+              - column:
+                  name: description
+                  type: varchar(100)
+        - addForeignKeyConstraint:
+            baseTableName: document
+            baseColumnNames: developer_id
+            referencedTableName: developer
+            constraintName: fr_developer_id
+            referencedColumnNames: id
+

@@ -1,0 +1,54 @@
+<!doctype html>
+<html class="no-js" lang="en" xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Account confirmed</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" th:href="@{/css/plugins.css}">
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+
+<body>
+
+<div th:insert="page-template :: navbar"></div>
+
+<section class="login-wrapper">
+    <div class="container">
+        <div class="col-md-6 col-sm-8 col-md-offset-3 col-sm-offset-2">
+            <h2>Ваш аккаунт подтвержден!</h2>
+        </div>
+    </div>
+</section>
+
+<div th:insert="page-template :: end"></div>
+
+<script>
+    function openPopup(data) {
+        var popup = document.getElementById("popup");
+        popup.style.display = 'block';
+        let element = popup.querySelector('.popup-content ');
+        element.textContent = data
+
+    }
+
+    function closePopup(event) {
+        var popup = document.getElementById("popup");
+        if (event.target === popup) {
+            popup.style.display = "none";
+        }
+    }
+</script>
+<script type="text/javascript" th:src="@{/js/account.js}"></script>
+<script type="text/javascript" th:src="@{/js/company.js}"></script>
+<script type="text/javascript" th:src="@{/js/developer.js}"></script>
+<script type="text/javascript" th:src="@{/js/vacancy.js}"></script>
+<script type="text/javascript" th:src="@{/js/jquery.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/bootstrap.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/owl.carousel.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/bootsnav.js}"></script>
+<script type="text/javascript" th:src="@{/js/main.js}"></script>
+</body>
+</html>

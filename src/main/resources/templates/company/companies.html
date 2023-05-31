@@ -1,0 +1,355 @@
+<!doctype html>
+<html class="no-js" lang="en" xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Companies</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link type="text/css" rel="stylesheet" th:href="@{/css/plugins.css}">
+
+    <!-- Style & Common Css -->
+    <link type="text/css" rel="stylesheet" th:href="@{/css/common.css}">
+    <link type="text/css" rel="stylesheet" th:href="@{/css/main.css}">
+
+
+</head>
+
+<body>
+
+<div th:insert="page-template :: navbar"></div>
+
+<section class="main-banner" style="background:#242c36">
+    <div class="container">
+        <div class="caption">
+            <h2>Build Your Career</h2>
+
+            <fieldset>
+                <div class="col-md-10 col-sm-10 no-pad">
+                    <input type="text" class="form-control border-right" id="inputFindAccount"
+                           placeholder="Введите название"
+                           name="name"
+                           onkeyup="searchCompany(document.getElementById('inputFindAccount').value, 0)"/>
+                </div>
+
+                <div class="col-md-2 col-sm-2 no-pad">
+                    <button class="btn seub-btn"
+                            onclick="searchCompany(document.getElementById('inputFindAccount').value, 0)">Поиск
+                    </button>
+                </div>
+            </fieldset>
+        </div>
+    </div>
+</section>
+
+<section class="jobs">
+    <div>
+        <div style="display: none" id="registration-result" class="popup" onclick="closePopup(event)">
+            <div id="result-content" class="popup-content"><p>Content</p></div>
+
+        </div>
+    </div>
+
+    <div class="popup updateForm" id="updateForm" style="display: none">
+        <div class="popup-content registration-block">
+            <input type="text" id="updateCompanyId" class="updateCompanyName" hidden name="updateCompanyName"
+                   th:value="${id}">
+            <input type="text" id="updateCompanyName" class="updateCompanyName form-control input-lg"
+                   name="updateCompanyName"
+                   th:value="${name}">
+            </br>
+            <input type="text" id="updateCompanyDescription" class="updateCompanyDescription form-control input-lg"
+                   name="updateCompanyDescription" th:value="${description}">
+            </br>
+            <input type="text" id="updateCompanyWebsiteLink" class="updateCompanyWebsiteLink form-control input-lg"
+                   name="updateCompanyWebsiteLink" th:value="${websiteLink}">
+            </br>
+            <input type="email" id="updateCompanyType" class="updateCompanyType form-control input-lg"
+                   name="updateCompanyType"
+                   th:value="${type}">
+            </br>
+            <button class="block-reply-button find-by-document" onclick="updateCompany( document.getElementById('updateCompanyId').value,
+                document.getElementById('updateCompanyName').value,
+                document.getElementById('updateCompanyDescription').value,
+                document.getElementById('updateCompanyWebsiteLink').value,
+                document.getElementById('updateCompanyType').value)">Сохранить
+            </button>
+
+            <button class="block-reply-button find-by-document button-cancel" onclick="closeUpdatePopup(event)">Отмена
+            </button>
+        </div>
+    </div>
+
+    <div id="popup" class="popup registerPopup">
+        <div class="popup-content registration-block">
+            <input class="form-control input-lg" type="text" id="newCompanyname" name="newCompanyname"
+                   placeholder="Название">
+            </br>
+            <input class="form-control input-lg" type="text" id="newCompanydescription" name="newCompanydescription"
+                   placeholder="Описание">
+            </br>
+            <input class="form-control input-lg" type="text" id="newCompanywebsiteLink" name="newCompanywebsiteLink"
+                   placeholder="Ссылка">
+            </br>
+            <input class="form-control input-lg" type="email" id="newCompanyemail" name="newCompanyemail"
+                   placeholder="Email">
+            </br>
+            <input class="form-control input-lg" type="text" id="newCompanytype" name="newCompanytype"
+                   placeholder="Тип компании">
+            </br>
+
+            <button class="block-reply-button find-by-document" onclick="addCompany(document.getElementById('newCompanyname').value,
+        document.getElementById('newCompanydescription').value,
+        document.getElementById('newCompanywebsiteLink').value,
+        document.getElementById('newCompanyemail').value,
+        document.getElementById('newCompanytype').value)">Зарегистрировать
+            </button>
+            <button class="block-reply-button find-by-document button-cancel" onclick="closeRegisterPopup(event)">
+                Отмена
+            </button>
+        </div>
+    </div>
+    <div class="container" id="hrs">
+        <div class="row heading">
+            <h2>Все компании</h2>
+        </div>
+
+        <div class="row top-pad">
+            <div class="filter">
+                <div class="col-md-6 col-sm-6">
+                    <button id="show-button-get-all-companies" style="display: none"
+                            class="block-reply-button find-by-document" onclick="getAllCompanies(0)">Показать все
+                        компании
+                    </button>
+                    <button id="show-button-get-moderated-companies" style="display: none"
+                            class="block-reply-button find-by-document" onclick="getAllModeratedCompanies(0)">Компании
+                        со
+                        статусом moderated
+                    </button>
+                    <br>
+                    <button id="show-registration-form"
+                            class="block-reply-button find-by-document" onclick="openPopup()">Зарегистрировать компанию
+                    </button>
+                </div>
+
+            </div>
+        </div>
+        <div class="companies" id="companies"></div>
+
+        <template id="template-company">
+            <div id="companyBlock">
+                <div class="company-list">
+                    <div class="row">
+                        <div class="col-md-1 col-sm-1">
+                            <div class="company-logo">
+                            </div>
+                        </div>
+                        <div class="col-md-8 col-sm-8">
+                            <div class="company-content">
+
+                                <div style="display: inline-flex">
+                                    <h2 id="companyName" class="developer-info">
+                                        &nbsp;</h2>
+
+                                </div>
+                                <div>
+                                    <div>Статус: <p style="display: inline-flex" class="company-status"
+                                                    id="companyStatus"></p></div>
+                                    <div>Сайт: <p style="display: inline-flex" id="websiteLink"></p></div>
+                                    <div>Email: <p style="display: inline-flex" id="companyEmail"></p></div>
+                                    <div>Описание: <p id="description" style="display: none"></p></div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="col-md-2 col-sm-2">
+
+                            <p id="companyId" hidden type="text"></p>
+
+                            <button id="companyLink" class="button-open-developer"
+                            >Подробнее
+                            </button>
+                            <button style="display: none" id="closeCompanyInfo" class="button-open-developer">Скрыть
+                            </button>
+                            <button style="display: none" id="updateCompanyInfo" class="button-open-developer">
+                                Редактировать
+                            </button>
+                            <button style="display: none" id="deleteCompany" class="button-open-developer">
+                                Удалить
+                            </button>
+                            <button style="display: none" id="blockCompany" class="button-open-developer">
+                                Заблокировать
+                            </button>
+                            <button style="display: none" id="confirmCompany" class="button-open-developer">
+                                Подтвердить
+                            </button>
+                            </p>
+                        </div>
+                    </div>
+
+
+                </div>
+                <div id="company-vacancies"></div>
+            </div>
+
+        </template>
+
+        <template id="vacancy-template">
+            <div class="companies">
+                <div class="company-list">
+                    <div class="row">
+                        <div class="col-md-1 col-sm-1">
+                        </div>
+                        <div class="col-md-10 col-sm-10">
+
+                            <div class="company-content">
+
+                                <div class="elements">
+                                    <h3><span id="vacancySalary" class="salary"></span></h3>
+                                    <h3 id="vacancyRemote" style="display: none"><span class="full-time">Remote
+                                   </span></h3>
+                                </div>
+                                <h3 id="vacancyName"></h3>
+                                <p hidden id="vacancyId"></p>
+                                <div id="tagBlock">
+
+                                </div>
+
+
+                            </div>
+                            <div class="developer-link">
+                                <a id="vacancyLink" href="/vacancy">Открыть информацию о
+                                    вакансии</a>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </template>
+
+        <template id="tag-template">
+            <div id="tagName" class="tag-list"></div>
+        </template>
+
+        <div style="display: inline-flex">
+
+            <template id="next-page-template">
+
+                <div class="to-page-block">
+                    <ul class="pagination">
+
+                        <li>
+                            <div>
+
+                                <p hidden id="nextPageValue"></p>
+                                <a id="nextPage">next</a>
+                            </div>
+                        </li>
+
+                    </ul>
+                </div>
+
+            </template>
+
+            <template id="back-page-template">
+
+                <div class="to-page-block">
+                    <ul class="pagination">
+
+                        <li>
+                            <div>
+
+                                <p hidden id="backPageValue"></p>
+                                <a id="backPage">back</a>
+                            </div>
+                        </li>
+
+                    </ul>
+                </div>
+
+            </template>
+
+            <div id="backPageBlock"></div>
+            <div id="nextPageBlock"></div>
+        </div>
+    </div>
+
+</section>
+
+
+<div th:insert="page-template :: end"></div>
+
+<script type="text/javascript" th:src="@{/js/company.js}"></script>
+<script type="text/javascript" th:src="@{/js/developer.js}"></script>
+<script type="text/javascript" th:src="@{/js/account.js}"></script>
+<script>
+
+    function openRegistrationResult(data) {
+
+        let popup = document.getElementById("registration-result");
+        popup.style.display = 'block';
+        let element = popup.querySelector('#result-content');
+        element.textContent = data
+
+    }
+
+    function openPopup() {
+        let popup = document.getElementById("popup");
+        popup.style.display = 'block';
+    }
+
+    function closePopup(event) {
+        let popup = document.getElementById("registration-result");
+
+        if (event.target === popup) {
+            popup.style.display = "none";
+        }
+
+    }
+
+    function closeUpdatePopup(event) {
+        console.log("Пытается закрыть")
+        let popup = document.querySelector(".updateForm");
+        popup.style.display = "none";
+    }
+
+    function closeRegisterPopup(event) {
+        let popup = document.querySelector(".registerPopup");
+
+        popup.style.display = "none";
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        getAllConfirmedCompanies(0)
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+
+        let token = localStorage.getItem("accessToken");
+        let parsedToken = parseJwt(token);
+        let role = parsedToken.role;
+
+        if (role === 'ROLE_ADMIN' || role === 'ROLE_MODERATOR') {
+            let element = document.getElementById('show-button-get-all-companies');
+            element.style.display = 'block'
+
+            if (role === 'ROLE_MODERATOR') {
+                let buttonElement = document.getElementById('show-button-get-moderated-companies');
+                buttonElement.style.display = 'block'
+            }
+        }
+    });
+
+</script>
+<script type="text/javascript" th:src="@{/js/account.js}"></script>
+<script type="text/javascript" th:src="@{/js/jquery.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/bootstrap.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/owl.carousel.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/bootsnav.js}"></script>
+<script type="text/javascript" th:src="@{/js/main.js}"></script>
+<script type="text/javascript" th:src="@{/js/vacancy.js}"></script>
+<script type="text/javascript" th:src="@{/js/admin.js}"></script>
+</body>
+</html>

@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Developer</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" th:href="@{/css/plugins.css}">
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+
+<body>
+<div th:insert="page-template :: navbar"></div>
+
+<section class="inner-banner" style="backend:#242c36 url(https://via.placeholder.com/1920x600)no-repeat;">
+    <div class="container">
+        <div class="caption">
+            <h2>Get your jobs</h2>
+            <p>Get your Popular jobs <span>New job</span></p>
+        </div>
+    </div>
+</section>
+
+
+<section class="profile-detail">
+    <div class="container">
+        <div th:object="${developerResponse}">
+            <p hidden="hidden"><span th:text="*{id}"></span></p>
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="basic-information">
+                        <div class="col-md-3 col-sm-3">
+                            <div th:if="*{photo==null}">
+                                <img th:src="@{/image/default-account-image.png}" class="img-responsive">
+                            </div>
+                            <div th:if="*{photo!=null}">
+                                <img th:src="*{photo.link}" class="img-responsive"/>
+                            </div>
+                        </div>
+                        <div class="col-md-9 col-sm-9">
+                            <div class="profile-content">
+                                <div style="display: inline-flex">
+                                    <h2 class="developer-info" th:text="*{firstName}">&nbsp;</h2>
+                                    <h2 class="developer-info" th:text="*{lastName}"></h2>
+
+                                    <div class="container-reply-button">
+                                        <div>
+                                            <button class="block-reply-button" id="block-account"
+                                                    style="display: none"
+                                                    th:attr="onclick=|blockAccount('*{id}')|">
+                                                Заблокировать
+                                            </button>
+                                            <button class="block-reply-button" id="unblock-account"
+                                                    style="display: none"
+                                                    th:attr="onclick=|unblockAccount('*{id}')|">
+                                                Разблокировать
+                                            </button>
+                                        </div>
+
+                                        <div id="error" class="error" onclick="closeErrorBlock(event)">
+                                            <div class="error-content"><p>Ваша заявка отправлена!</p></div>
+
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <ul class="information">
+                                    <li><span>Email:</span>
+                                        <div style="display: inline-block" th:text="*{email}"></div>
+                                    </li>
+                                    <li><span>Username:</span>
+                                        <div style="display: inline-block" th:text="*{username}"></div>
+                                    </li>
+                                    <li><span>День рождения:</span>
+                                        <div style="display: inline-block" th:text="*{dateOfBirth}"></div>
+                                    </li>
+                                    <li><span>Опыт работы:</span>
+                                        <div style="display: inline-block" th:text="*{workExperience}"></div>
+                                    </li>
+                                    <li><span>Город:</span>
+                                        <div style="display: inline-block" th:text="*{city}"></div>
+                                    </li>
+
+                                    <div id="accountStatus" style="display: none">
+                                        <li><span>Статус:</span>
+                                            <div id="statusValue" style="display: inline-block"
+                                                 th:text="*{status}"></div>
+                                        </li>
+                                    </div>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <i class="fa fa-user fa-fw"></i> Прикрепленные документы
+                            </div>
+                            <div class="panel-body">
+                                <div th:if="${documents != null}">
+                                    <div th:each="document: ${documents}" style="display: inline-flex">
+
+                                        <td>Описание документа:</td>
+                                        <td th:text="${document.description}"></td>
+                                        <a th:href="${document.downloadUrl}">&nbsp;Download</a>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <i class="fa fa-cog fa-fw"></i> Skills
+                            </div>
+                            <div class="panel-body">
+
+                                <div style="display: inline-flex">
+                                    <span th:each="spec: *{specializations}">
+                                        <span class="service-tag" th:text="${spec.name}"></span>
+                                    </span>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<div th:insert="page-template :: end"></div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+
+        let token = localStorage.getItem("accessToken");
+        let parsedToken = parseJwt(token);
+
+        let role = parsedToken.role;
+
+        if (role === 'ROLE_ADMIN') {
+
+            let accountStatus = document.getElementById('accountStatus');
+            accountStatus.style.display = 'block'
+
+            console.log(accountStatus.textContent)
+
+            let statusValue = document.getElementById('statusValue');
+            console.log(statusValue)
+            if (statusValue.textContent === "CONFIRMED") {
+                let blockAccount = document.getElementById('block-account');
+                blockAccount.style.display = 'block'
+            }
+            if (statusValue.textContent === "BLOCKED") {
+                let unblockAccount = document.getElementById('unblock-account');
+                unblockAccount.style.display = 'block'
+            }
+
+        }
+    });
+
+    function openErrorBlock(data) {
+        var popup = document.getElementById("error");
+        popup.style.display = 'block';
+        let element = popup.querySelector('.error-content ');
+        element.textContent = data
+
+    }
+
+    function closeErrorBlock(event) {
+        var popup = document.getElementById("error");
+
+        if (event.target === popup) {
+            popup.style.display = "none";
+        }
+    }
+
+</script>
+<script type="text/javascript" th:src="@{/js/account.js}"></script>
+<script type="text/javascript" th:src="@{/js/admin.js}"></script>
+<script type="text/javascript" th:src="@{/js/vacancy.js}"></script>
+<script type="text/javascript" th:src="@{/js/jquery.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/bootstrap.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/owl.carousel.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/bootsnav.js}"></script>
+<script type="text/javascript" th:src="@{/js/main.js}"></script>
+</body>
+</html>

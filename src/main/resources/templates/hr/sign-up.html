@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Sign up</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" th:href="@{/css/plugins.css}">
+
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+
+</head>
+
+<body>
+
+<div th:insert="page-template :: navbar"></div>
+
+<section class="login-wrapper">
+    <div class="container">
+        <div class="col-md-6 col-sm-8 col-md-offset-3 col-sm-offset-2">
+
+            <div>
+
+                <img class="img-responsive" alt="logo" th:src="@{/img/logo.png}">
+                <form th:method="POST" th:action="@{/hr/sign-up}" th:object="${createHrRequest}">
+
+                    <div>
+                        <input type="text" class="form-control input-lg" th:field="*{firstName}" id="firstName"
+                               placeholder="Имя"/>
+                        <span class="error-message" th:if="${#fields.hasErrors('firstName')}"
+                              th:errors="*{firstName}">Error</span>
+                    </div>
+                    <div>
+                        <input type="text" class="form-control input-lg" th:field="*{lastName}" id="lastName"
+                               placeholder="Фамилия"/>
+                        <span class="error-message" th:if="${#fields.hasErrors('lastName')}"
+                              th:errors="*{lastName}">Error</span>
+                    </div>
+                    <div>
+                        <input type="text" class="form-control input-lg" th:field="*{companyName}" id="companyName"
+                               placeholder="Компания"/>
+                        <span class="error-message" th:if="${#fields.hasErrors('companyName')}"
+                              th:errors="*{companyName}">Error</span></div>
+                    <input type="text" class="form-control input-lg" th:field="*{city}" id="city" placeholder="Город"/>
+                    <div><input type="text" id="email" th:field="*{email}" class="form-control input-lg"
+                                placeholder="Email"/>
+                        <span class="error-message" th:if="${#fields.hasErrors('email')}"
+                              th:errors="*{email}">Error</span></div>
+                    <div><input type="password" id="password" th:field="*{password}"
+                                class="form-control input-lg"
+                                placeholder="Password"/>
+                        <span class="error-message" th:if="${#fields.hasErrors('password')}"
+                              th:errors="*{password}">Error</span></div>
+                    <input class="btn btn-primary" type="submit" value="Зарегистрироваться"/>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+<div th:insert="page-template :: end"></div>
+
+<script>
+    function openPopup(data) {
+        let popup = document.getElementById("popup");
+        popup.style.display = 'block';
+        let element = popup.querySelector('.popup-content ');
+        element.textContent = data
+
+    }
+
+    function closePopup(event) {
+        let popup = document.getElementById("popup");
+        if (event.target === popup) {
+            popup.style.display = "none";
+        }
+    }
+</script>
+<script type="text/javascript" th:src="@{/js/account.js}"></script>
+<script type="text/javascript" th:src="@{/js/company.js}"></script>
+<script type="text/javascript" th:src="@{/js/developer.js}"></script>
+
+<script type="text/javascript" th:src="@{/js/vacancy.js}"></script>
+<script type="text/javascript" th:src="@{/js/jquery.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/bootstrap.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/owl.carousel.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/bootsnav.js}"></script>
+<script type="text/javascript" th:src="@{/js/main.js}"></script>
+</body>
+</html>

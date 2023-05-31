@@ -1,0 +1,56 @@
+spring:
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${EMAIL:sendmailservice3@gmail.com}
+    password: ${PASSWORD:fkbbqvpqmjwsygzc}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+  redis:
+    host: ${REDIS_HOST:localhost}
+    port: ${REDIS_PORT:6380}
+  application:
+    name: job-search-service
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:job-search-service-db}
+    username: ${POSTGRES_USER:postgres}
+    password: ${POSTGRES_PASSWORD:worktravel}
+  liquibase:
+    change-log: db/changelog/database-changelog-master.yml
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+minio:
+  access-key: EySLoMKpAFT8sbu7
+  secret-key: Bfphf5WVQCJb82pDpSGaEJSF4m7hxBTi
+  endpoint: http://localhost:9000
+  bucket-name-photos: account-photo
+  bucket-name-documents: developer-document
+default:
+  page:
+    size: 5
+    number: 0
+application:
+  token:
+    access:
+      expires:
+        time: 3600000
+    refresh:
+      expires:
+        time: 864000000
+jwt:
+  secret-key: pokemon
+server:
+  port: 8080
+logger:
+  enabled: true
+

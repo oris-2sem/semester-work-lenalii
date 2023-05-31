@@ -1,0 +1,61 @@
+version: '3.8'
+
+services:
+  job-search-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: job-search-service
+    image: app-image-job-search-service
+    depends_on:
+      - postgres
+      - minio
+      - redis
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: job-search-service-db
+      REDIS_HOST: redis
+      MINIO_HOST: minio
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: worktravel
+    ports:
+      - "8080:8080"
+  redis:
+    build: ./config/redis
+    container_name: redis_2
+    ports:
+      - 6380:6380
+    volumes:
+      - redis_volume:/data
+  postgres:
+    image: postgres:14-alpine
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: worktravel
+      POSTGRES_DB: job-search-service-db
+  minio:
+    image: minio/minio:latest
+    container_name: 'minio-container-2'
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - ./data:/data
+    environment:
+      MINIO_ACCESS_KEY: EySLoMKpAFT8sbu7
+      MINIO_SECRET_KEY: Bfphf5WVQCJb82pDpSGaEJSF4m7hxBTi
+    command: server /data --console-address :9001
+volumes:
+  minio_data:
+  postgres_data:
+  redis_volume:
+
+
+
+
+

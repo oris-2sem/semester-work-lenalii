@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit information</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" th:href="@{/css/plugins.css}">
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+
+    <style>
+        .error {
+            color: red;
+        }
+    </style>
+
+</head>
+<body>
+<div th:insert="page-template :: navbar"></div>
+
+<section class="inner-banner" style="backend:#242c36 url(https://via.placeholder.com/1920x600)no-repeat;">
+    <div class="container">
+        <div class="caption">
+            <h2>Get your jobs</h2>
+            <p>Get your Popular jobs <span>New job</span></p>
+        </div>
+    </div>
+</section>
+
+
+<section class="profile-detail">
+    <div class="container">
+
+        <div class="col-md-12">
+            <div class="row">
+                <div class="basic-information">
+
+
+                    <div class="col-md-3 col-sm-3">
+                        <p hidden="hidden"><span th:text="*{id}"></span></p>
+
+                        <div th:if="${developer.photo==null}">
+                            <img th:src="@{/image/default-account-image.png}" class="img-responsive">
+                            <div id="menu-add-photo" class="menu">
+                                <form action="/photo" method="post" enctype="multipart/form-data">
+                                    <label for="photo" class="button-file-upload">Выбрать файл</label>
+                                    <input type="file" id="photo" name="file" required>
+                                    <br>
+                                    <button class="block-upload-file" type="submit" name="submit">Добавить
+                                        фото
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                        <div th:if="${developer.photo!=null}">
+                            <img th:src="${developer.photo.link}" class="img-responsive" onclick="openMenu()"/>
+                            <div id="menu" class="menu" style="display: none">
+                                <form action="/photo" method="post" enctype="multipart/form-data">
+                                    <input type="hidden" name="_method" value="DELETE"/>
+                                    <button class="block-upload-file" type="submit" name="submit">Удалить
+                                        фото
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+
+                    </div>
+                    <form th:method="post" th:action="@{/developer}" th:object="${updateDeveloperRequest}">
+                        <input type="hidden" name="_method" value="PATCH"/>
+                        <div class="col-md-9 col-sm-9">
+                            <div class="profile-content">
+                                <ul class="information">
+                                    <li><span>Имя:</span>
+                                        <input class="vacancy-update" style="display: inline-block"
+                                               th:field="*{firstName}"/>
+                                        <span class="error" th:if="${#fields.hasErrors('firstName')}"
+                                              th:errors="*{firstName}">Error</span>
+                                    </li>
+                                    <li><span>Фамилия:</span>
+                                        <input class="vacancy-update" style="display: inline-block"
+                                               th:field="*{lastName}"
+                                               id="lastName"/>
+                                        <span class="error" th:if="${#fields.hasErrors('lastName')}"
+                                              th:errors="*{lastName}">Error</span>
+                                    </li>
+                                    <li><span>День рождения:</span>
+                                        <input class="vacancy-update" style="display: inline-block"
+                                               th:field="*{dateOfBirth}"
+                                               id="dateOfBirth"/>
+                                        <span class="error" th:if="${#fields.hasErrors('dateOfBirth')}"
+                                              th:errors="*{dateOfBirth}">Error</span>
+                                    </li>
+                                    <li><span class="element">Опыт работы:</span>
+                                        <input class="vacancy-update" style="display: inline-block"
+                                               th:field="*{workExperience}"
+                                               id="workExperience"/>
+                                        <span class="error" th:if="${#fields.hasErrors('workExperience')}"
+                                              th:errors="*{workExperience}">Error</span>
+                                    </li>
+
+                                    <li><span>Город:</span>
+                                        <input class="vacancy-update" style="display: inline-block"
+                                               th:field="*{city}" id="city"/>
+                                        <span class="error" th:if="${#fields.hasErrors('city')}"
+                                              th:errors="*{city}">Error</span>
+                                    </li>
+                                    <li><span>State:</span>
+                                        <select class="vacancy-update" id="state" name="state" th:field="*{state}">
+                                            <option value="ACTIVE">ACTIVE</option>
+                                            <option value="NOT_ACTIVE">NOT_ACTIVE</option>
+                                        </select>
+                                    </li>
+
+                                </ul>
+                            </div>
+                            <input class="block-upload-file send-update-form" type="submit" value="update"/>
+                        </div>
+
+
+
+                    </form>
+
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <i class="fa fa-user fa-fw"></i> Прикрепленные документы
+                        </div>
+                        <div class="panel-body">
+                            <div th:if="${documents != null}">
+                                <div th:each="document: ${documents}">
+                                    <div style="display: inline-flex">
+                                        <td>Описание документа:</td>
+                                        <td th:text="${document.description}"></td>
+                                        <td th:text="${document.fileName}"></td>
+                                        <a th:href="${document.downloadUrl}">&nbsp;Загрузить</a>
+                                        <form th:action="@{/document}" method="post">
+                                            <input type="hidden" name="_method" value="DELETE"/>
+                                            <input type="text" th:value="${document.id}" name="documentId"
+                                                   id="documentId" hidden>
+                                            <button class="link-submit upload-file" type="submit"
+                                                    name="submit">
+                                                Удалить
+                                            </button>
+                                        </form>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="container-upload-file">
+                            <form action="/document/upload" method="post" enctype="multipart/form-data">
+                                <label for="file" class="button-file-upload">Выбрать файл</label>
+                                <p id="file-name"></p>
+                                <input type="file" id="file" name="file" onchange="displayFileName()"
+                                       required>
+                                <ul class="information">
+                                    <label for="file-description">Добавьте описание документа</label>
+                                    <input style="display: inline-block" id="file-description" type="text"
+                                           name="description"/>
+                                </ul>
+                                <button class="block-upload-file" type="submit" name="submit">Загрузить
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
+
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <i class="fa fa-cog fa-fw"></i> Skills
+                        </div>
+                        <div th:if="${developer.specializations != null}">
+                            <div id="elementList" style="display: inline-flex">
+                                <div class="panel-body" th:each="spec: ${developer.specializations}">
+
+                                    <label class="tag-custom-checkbox">
+                                        <input th:text="${spec.name}" type="checkbox" th:value="${spec.id}"
+                                               onchange="toggleListItem(this)"/>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="delete-spec">
+                            <button class="button-file-upload" onclick="deleteSpecializationsFromVacancy()">delete
+                                selected specializations
+                            </button>
+                        </div>
+                        <div>
+                            <div class="add-spec" style="display: inline-flex">
+                                <button class="button-file-upload" onclick="addSpecializationsToVacancy()">add
+                                    specializations
+                                </button>
+                            </div>
+                            <input class="vacancy-update" style="display: inline-flex" type="text"
+                                   id="specializationsInput" placeholder="Specializations">
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<div th:insert="page-template :: end"></div>
+<script>
+
+    function toggleListItem(checkbox) {
+        var listItem = checkbox.parentNode;
+        listItem.classList.toggle("selected");
+    }
+
+    function displayFileName() {
+        var fileInput = document.getElementById("file");
+        var fileNameElement = document.getElementById("file-name");
+
+        if (fileInput.files.length > 0) {
+            fileNameElement.textContent = "Selected file: " + fileInput.files[0].name;
+        } else {
+            fileNameElement.textContent = "";
+        }
+    }
+</script>
+<script type="text/javascript" th:src="@{/js/account.js}"></script>
+<script type="text/javascript" th:src="@{/js/developer.js}"></script>
+<script type="text/javascript" th:src="@{/js/vacancy.js}"></script>
+<script type="text/javascript" th:src="@{/js/jquery.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/bootstrap.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/owl.carousel.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/bootsnav.js}"></script>
+<script type="text/javascript" th:src="@{/js/main.js}"></script>
+</body>
+</html>
