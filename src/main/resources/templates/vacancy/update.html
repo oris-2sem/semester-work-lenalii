@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit vacancy</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" th:href="@{/css/plugins.css}">
+
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+<body>
+<div th:insert="page-template :: navbar"></div>
+
+<section class="inner-banner" style="backend:#242c36 url(https://via.placeholder.com/1920x600)no-repeat;">
+    <div class="container">
+        <div class="caption">
+            <h2>Get your jobs</h2>
+            <p>Get your Popular jobs <span>New job</span></p>
+        </div>
+    </div>
+</section>
+
+
+<section class="profile-detail">
+    <div class="container">
+        <div class="col-md-12">
+            <div class="row">
+                <div class="basic-information">
+
+                    <form th:method="post" th:action="@{/vacancy}" th:object="${request}">
+                        <input type="hidden" name="_method" value="PATCH"/>
+                            <div class="col-md-12 col-sm-12">
+                                <div class="profile-content">
+
+                                    <input type="text" th:field="*{id}" th:value="${id}" id="id" hidden/>
+                                    <ul class="information">
+
+                                        <li><span>Название:</span>
+                                            <input class="vacancy-update" style="display: inline-block" type="text"
+                                                   th:field="*{name}"
+                                                   id="name"/>
+                                            <span class="error" th:if="${#fields.hasErrors('name')}"
+                                                  th:errors="*{name}">Error</span>
+                                        </li>
+                                        <li><span>З/п:</span>
+                                            <input class="vacancy-update" style="display: inline-block" type="number"
+                                                   th:field="*{salary}" id="salary"/>
+                                            <span class="error" th:if="${#fields.hasErrors('salary')}"
+                                                  th:errors="*{salary}">Error</span>
+                                        </li>
+                                        <li><span>City:</span>
+                                            <input class="vacancy-update" style="display: inline-block" type="text"
+                                                   th:field="*{city}" id="city"/>
+                                            <span class="error" th:if="${#fields.hasErrors('city')}"
+                                                  th:errors="*{city}">Error</span>
+                                        </li>
+                                        <li><span>Address:</span>
+
+                                            <input class="vacancy-update" style="display: inline-block" type="text"
+                                                   th:field="*{address}" id="address"/>
+                                            <span class="error" th:if="${#fields.hasErrors('address')}"
+                                                  th:errors="*{address}">Error</span>
+                                        </li>
+                                        <li><span>Status:</span>
+
+                                            <select class="vacancy-update" id="state" name="state" th:field="*{status}">
+                                                <option value="ACTIVE">ACTIVE</option>
+                                                <option value="NOT_ACTIVE">NOT_ACTIVE</option>
+                                            </select>
+                                        </li>
+                                        <li><span>Remote:</span>
+
+                                            <select class="vacancy-update" id="remote" name="state" th:field="*{remote}">
+                                                <option value="true">Да</option>
+                                                <option value="false">Нет</option>
+                                            </select>
+                                        </li>
+
+                                    </ul>
+
+                                </div>
+                            </div>
+
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <i class="fa fa-user fa-fw"></i> About vacancy
+                                </div>
+
+                                <div class="panel-body">
+
+                                    <textarea class="vacancy-description" th:field="*{description}"></textarea>
+                                </div>
+                                <input class="block-reply-button find-by-document" type="submit" value="Сохранить">
+                            </div>
+                    </form>
+
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <i class="fa fa-leaf fa-fw"></i> Tags:
+                        </div>
+
+                        <input type="text" id="vacancyId" hidden th:value="${vacancy.id}">
+                        <div th:if="${vacancy.tags != null}">
+                            <div id="elementList" style="display: inline-flex" >
+                                <div class="panel-body" th:each="tag: ${vacancy.tags}"  >
+
+                                    <label class="tag-custom-checkbox" >
+                                        <input class="service-tag"  th:text="${tag.tag}" type="checkbox" th:value="${tag.id}" onchange="toggleListItem(this)"/>
+
+                                    </label>
+                                </div>
+                            </div>
+                            <div>
+                                <button class="block-reply-button find-by-document delete-tags" onclick="deleteTagsFromVacancy()">Удалить выбранные вакансии</button>
+                            </div>
+                        </div>
+
+
+                        <div>
+                            <input type="text" id="vacancyIdInput" hidden th:value="${vacancy.id}">
+                            <input class="vacancy-update" type="text" id="tagsInput" placeholder="Tags">
+                            <button class="block-reply-button find-by-document hide-company-info" onclick="addTagsToVacancy()">Добавить</button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div th:insert="page-template :: end"></div>
+<script>
+    function toggleListItem(checkbox) {
+        var listItem = checkbox.parentNode;
+        listItem.classList.toggle("selected");
+    }
+</script>
+<script type="text/javascript" th:src="@{/js/account.js}"></script>
+<script type="text/javascript" th:src="@{/js/vacancy.js}"></script>
+<script type="text/javascript" th:src="@{/js/jquery.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/bootstrap.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/owl.carousel.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/bootsnav.js}"></script>
+<script type="text/javascript" th:src="@{/js/main.js}"></script>
+</body>
+</html>

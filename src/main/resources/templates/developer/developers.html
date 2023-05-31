@@ -1,0 +1,129 @@
+<!doctype html>
+<html class="no-js" lang="en" xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Developers</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link type="text/css" rel="stylesheet" th:href="@{/css/plugins.css}">
+    <link type="text/css" rel="stylesheet" th:href="@{/css/common.css}">
+    <link type="text/css" rel="stylesheet" th:href="@{/css/main.css}">
+
+</head>
+
+<body>
+<div th:insert="page-template :: navbar"></div>
+
+<section class="inner-banner" style="backend:#242c36 url(https://via.placeholder.com/1920x600)no-repeat;">
+    <div class="container">
+        <div class="caption">
+            <h2>Get your jobs</h2>
+            <p>Get your Popular jobs <span>New job</span></p>
+        </div>
+    </div>
+</section>
+
+<section class="jobs">
+    <div class="container" id="developers">
+        <div class="row heading">
+            <h2>Поиск разработчиков</h2>
+            <p>Найди своего разработчика</p>
+        </div>
+        <div class="row top-pad">
+            <div class="filter">
+                <div class="col-md-6 col-sm-6" style="display: inline-flex">
+                    <button class="block-reply-button find-by-document" onclick="getDevelopersWithDocuments()">Прикреплено резюме</button>
+                </div>
+
+            </div>
+        </div>
+        <div class="companies">
+            <div class="developers-page" th:each="developer : ${developerPage.content}">
+                <div class="company-list">
+                    <div class="row">
+                        <div class="col-md-2 col-sm-2">
+                            <div class="company-logo">
+                                <div id="developerPhoto">
+                                    <div th:if="${developer.photo==null}">
+                                        <img th:src="@{/image/default-account-image.png}" class="img-responsive">
+                                    </div>
+                                    <div th:if="${developer.photo!=null}">
+                                        <img th:src="${developer.photo.link}" class="img-responsive"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-8 col-sm-8">
+                            <div class="company-content">
+
+                                <div style="display: inline-flex">
+                                    <h2 id="developerFirstName" class="developer-info" th:text="${developer.firstName}">
+                                        &nbsp;</h2>
+                                    <h2 id="developerLastName" class="developer-info"
+                                        th:text="${developer.lastName}"></h2>
+
+                                </div>
+
+                                <div>
+                                    <div id="specializations">
+                                <span th:each="specialization, iterStat : ${developer.specializations}">
+                                    <span class="tag-list" th:text="${specialization.name}"></span>
+                                </span>
+                                    </div>
+                                </div>
+                                <p><span class="company-name"><i class="fa fa-briefcase">Опыт работы: <span
+                                        id="developerWorkExperience"
+                                        th:text="${developer.workExperience}"></span></i></span>
+                                    <span
+                                            class="company-location"><i id="developerCity" class="fa fa-map-marker"
+                                                                        th:text="${developer.city}"></i></span></p>
+                            </div>
+                        </div>
+                        <div class="col-md-2 col-sm-2">
+                            <div th:with="developerId=${developer.id}">
+                                <a id="developerLink" class="button-open-developer" th:href="${'/developer/'+developerId}">Открыть</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div id="pageNext" th:if="${developerPage.totalPages > 1 && developerPage.pageable.pageNumber<developerPage.totalPages}">
+            <ul class="pagination">
+
+                <li>
+                    <div th:with="pageNum=${developerPage.pageable.pageNumber+1}">
+
+                        <a th:href="${developerPage.totalPages == 0 ? '/developer' : '/vacancy/by/hr?number=' + pageNum}">next</a>
+                    </div>
+                </li>
+
+            </ul>
+        </div>
+        <div id="pageBack" th:if="${developerPage.totalPages > 1 && developerPage.pageable.pageNumber>0}">
+            <ul class="pagination">
+
+                <li>
+                    <div th:with="pageNum=${developerPage.pageable.pageNumber-1}">
+
+                        <a th:href="${developerPage.totalPages == 0 ? '/developer' : '/developer/by/hr?number=' + pageNum}">back</a>
+                    </div>
+                </li>
+
+            </ul>
+        </div>
+    </div>
+</section>
+<div th:insert="page-template :: end"></div>
+<script type="text/javascript" th:src="@{/js/account.js}"></script>
+<script type="text/javascript" th:src="@{/js/jquery.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/developer.js}"></script>
+<script type="text/javascript" th:src="@{/js/bootstrap.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/owl.carousel.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/bootsnav.js}"></script>
+<script type="text/javascript" th:src="@{/js/main.js}"></script>
+<script type="text/javascript" th:src="@{/js/vacancy.js}"></script>
+</body>
+</html>

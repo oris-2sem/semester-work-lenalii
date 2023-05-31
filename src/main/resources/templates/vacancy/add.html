@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Add vacancy</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" th:href="@{/css/plugins.css}">
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+<body>
+<div th:insert="page-template :: navbar"></div>
+
+
+<section class="inner-banner" style="backend:#242c36 url(https://via.placeholder.com/1920x600)no-repeat;">
+    <div class="container">
+        <div class="caption">
+            <h2>Get your jobs</h2>
+            <p>Get your Popular jobs <span>New job</span></p>
+        </div>
+    </div>
+</section>
+
+<section class="profile-detail">
+    <div class="container">
+        <div class="col-md-12">
+            <div class="row">
+                <div class="basic-information">
+                    <form th:method="post" th:action="@{/vacancy}" th:object="${request}">
+
+                        <div class="col-md-12 col-sm-12">
+                            <div class="profile-content">
+                                <ul class="information">
+                                    <li><span>Введите название:</span>
+                                        <input class="vacancy-update" style="display: inline-block" type="text"
+                                               th:field="*{name}" id="name"/>
+                                        <span class="error" th:if="${#fields.hasErrors('name')}"
+                                              th:errors="*{name}">Error</span>
+                                    </li>
+                                    <li><span>Введите з/п:</span>
+                                        <input class="vacancy-update" style="display: inline-block" type="number"
+                                               th:field="*{salary}" id="salary"/>
+                                        <span class="error" th:if="${#fields.hasErrors('salary')}"
+                                              th:errors="*{salary}">Error</span>
+                                    </li>
+                                    <li><span>Введите город:</span>
+                                        <input class="vacancy-update" style="display: inline-block" type="text"
+                                               th:field="*{city}"
+                                               id="city"/>
+                                        <span class="error" th:if="${#fields.hasErrors('city')}"
+                                              th:errors="*{city}">Error</span>
+                                    </li>
+                                    <li><span>Введите адрес:</span>
+                                        <input class="vacancy-update" style="display: inline-block" type="text"
+                                               th:field="*{address}" id="address"/>
+                                        <span class="error" th:if="${#fields.hasErrors('address')}"
+                                              th:errors="*{address}">Error</span>
+                                    </li>
+                                    <li><span>Выберите статус:</span>
+                                        <select class="vacancy-update" id="state" name="state" th:field="*{status}">
+                                            <option value="ACTIVE">ACTIVE</option>
+                                            <option value="NOT_ACTIVE">NOT_ACTIVE</option>
+                                        </select>
+                                        <span class="error" th:if="${#fields.hasErrors('status')}"
+                                              th:errors="*{status}">Error</span>
+                                    </li>
+                                    <li><span>Удаленно:</span>
+
+                                        <select class="vacancy-update" id="remote" name="state" th:field="*{remote}">
+                                            <option value="true">Да</option>
+                                            <option value="false">Нет</option>
+                                        </select>
+                                        <span class="error" th:if="${#fields.hasErrors('remote')}"
+                                              th:errors="*{remote}">Error</span>
+                                    </li>
+                                    <li><span>Теги (введите через запятую):</span>
+                                        <input class="vacancy-update" type="text" th:field="*{tags}" id="tags">
+                                    </li>
+                                </ul>
+
+                            </div>
+                        </div>
+
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <i class="fa fa-user fa-fw"></i> About vacancy
+                            </div>
+
+                            <div class="panel-body">
+                                    <textarea class="vacancy-description" th:field="*{description}">
+                                    </textarea>
+                            </div>
+                            <input class="block-reply-button find-by-document" type="submit" value="Добавить вакансию">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+</section>
+
+<div th:insert="page-template :: end"></div>
+<script>
+    function toggleListItem(checkbox) {
+        let listItem = checkbox.parentNode;
+        listItem.classList.toggle("selected");
+    }
+</script>
+<script type="text/javascript" th:src="@{/js/account.js}"></script>
+<script type="text/javascript" th:src="@{/js/vacancy.js}"></script>
+<script type="text/javascript" th:src="@{/js/jquery.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/bootstrap.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/owl.carousel.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/bootsnav.js}"></script>
+<script type="text/javascript" th:src="@{/js/main.js}"></script>
+</body>
+</html>

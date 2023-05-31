@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Vacancy</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" th:href="@{/css/plugins.css}">
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+
+</head>
+
+<body>
+
+<div th:insert="page-template :: navbar"></div>
+
+<section class="inner-banner" style="backend:#242c36 url(https://via.placeholder.com/1920x600)no-repeat;">
+    <div class="container">
+        <div class="caption">
+            <h2>Get your jobs</h2>
+            <p>Get your Popular jobs <span>New job</span></p>
+        </div>
+    </div>
+</section>
+
+
+<section class="profile-detail">
+    <div class="container">
+        <div class="col-md-12">
+            <div class="row">
+                <div class="basic-information">
+                    <div class="col-md-12 col-sm-12">
+                        <div class="profile-content">
+                            <div style="display: inline-flex">
+                                <h2 style="display: inline-flex" th:text="${vacancy.name}"></h2>
+                                <div class="container-reply-button">
+                                    <div>
+                                        <button class="block-reply-button" id="replay-button" style="display: none"
+                                                th:attr="onclick=|replyToVacancy('${vacancy.id}')|">
+                                            Откликнуться
+                                        </button>
+                                    </div>
+
+                                    <div id="popup" class="popup" onclick="closePopup(event)">
+                                        <div class="popup-content"><p>Ваша заявка отправлена!</p></div>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <ul class="information">
+
+                                <li><span>Salary:</span>
+                                    <div style="display: inline-block" th:text="${vacancy.salary}"></div>
+                                </li>
+                                <li><span>City:</span>
+                                    <div style="display: inline-block" th:text="${vacancy.city}"></div>
+                                </li>
+                                <li><span>Address:</span>
+                                    <div style="display: inline-block" th:text="${vacancy.address}"></div>
+                                </li>
+                                <li><span>Created date:</span>
+                                    <div style="display: inline-block" th:text="${#temporals.format(vacancy.createdDate, 'dd-MM-yyyy')}"></div>
+                                </li>
+                                <li th:if="${vacancy.remote==true}"><span>Remote:</span>
+                                    <div style="display: inline-block" th:text="да"></div>
+                                </li>
+                                <li th:if="${vacancy.remote!=true}"><span>Remote:</span>
+                                    <div style="display: inline-block" th:text="нет"></div>
+                                </li>
+
+                                <li><span>Company:</span>
+                                    <button class="getInformationAboutCompany block-reply-button find-by-document">
+                                        Показать информацию о компании
+                                    </button>
+                                    <div hidden id="companyId" class="companyId" th:text="${vacancy.companyResponse.id}"
+                                         th:value="${vacancy.companyResponse.id}"></div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="company-information company-container" style="display: none;">
+
+                        <ul class="information">
+                            <div class="company-info">
+                                <li><span>Название компании </span>
+                                    <div style="display: inline-block" th:text="${vacancy.companyResponse.name}"></div>
+                                </li>
+                                <li><span>Сайт компании </span>
+                                    <div style="display: inline-block"
+                                         th:text="${vacancy.companyResponse.websiteLink}"></div>
+                                </li>
+                                <li><span>Email компании </span>
+                                    <div style="display: inline-block" th:text="${vacancy.companyResponse.email}"></div>
+                                </li>
+                                <li><span>Тип компании </span>
+                                    <div style="display: inline-block" th:text="${vacancy.companyResponse.type}"></div>
+                                </li>
+                                <li><span>О компании </span>
+                                    <div style="display: inline-block"
+                                         th:text="${vacancy.companyResponse.description}"></div>
+                                </li>
+                            </div>
+                        </ul>
+                        <div class="vacancies">
+                            <p>Другие вакансии этой компании</p>
+                            <div class="company-vacancies" style="display: none;">
+                                <div class="vacancy-container-item" style="display: none;">
+
+                                    <li><span id="vacancyName" th:text="${vacancyName}">Название вакансии</span></li>
+                                    <div class="vacancyId" id="vacancyId" th:text="${vacancyId}" hidden></div>
+                                    <a id="get-vacancy-link" class="button-link" th:href="${'/vacancy/'+ vacancyId}">Открыть
+                                        вакансию</a>
+                                </div>
+                            </div>
+
+                            <button class="block-reply-button find-by-document hide-company-info">Скрыть информацию о
+                                компании
+                            </button>
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <i class="fa fa-user fa-fw"></i> About vacancy
+                        </div>
+                        <div class="panel-body">
+                            <p th:text="${vacancy.description}"></p>
+                        </div>
+                    </div>
+
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <i class="fa fa-leaf fa-fw"></i> Tags:
+                        </div>
+                        <div style="display: inline-flex">
+                            <div class="panel-body" th:each="tag : ${vacancy.tags}">
+
+                                <span class="service-tag" th:text="${tag.tag}"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="change-vacancy-container" style="display: none">
+
+                        <div>
+                            <a class="button-link" th:href="${'/vacancy/update/'+vacancy.id}">Edit vacancy</a>
+                        </div>
+                        </br>
+                        <div>
+                            <form th:method="post" th:action="@{/vacancy}">
+                                <input type="hidden" name="_method" value="DELETE"/>
+                                <input type="text" th:value="${vacancy.id}" name="vacancyId" hidden/>
+                                <input class="link-submit" type="submit" value="Delete vacancy"/>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div th:insert="page-template :: end"></div>
+<script>
+    function openPopup(data) {
+        let popup = document.getElementById("popup");
+        popup.style.display = 'block';
+        let element = popup.querySelector('.popup-content ');
+        element.textContent = data
+
+    }
+
+    function closePopup(event) {
+        let popup = document.getElementById("popup");
+        if (event.target === popup) {
+            popup.style.display = "none";
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        let token = localStorage.getItem("accessToken");
+        let parsedToken = parseJwt(token);
+        let role = parsedToken.role;
+        let hrId = parsedToken.sub;
+        let companyId = document.querySelector('#companyId').textContent;
+        if (role === 'ROLE_HR') {
+            checkHrCompanyAndVacancyCompanyMatch(hrId, companyId);
+        }
+
+        if (role === 'ROLE_DEVELOPER') {
+            let replyButton = document.getElementById('replay-button');
+            replyButton.style.display = 'block'
+        }
+    });
+
+    document.querySelector('.getInformationAboutCompany').addEventListener('click', function () {
+
+        let companyInfo = document.querySelector('.company-information');
+        companyInfo.style.display = 'block';
+        let companyId = document.querySelector('.companyId').textContent;
+        getCompanyInformation(companyId)
+        document.querySelector('.hide-company-info').disabled = false
+    })
+
+    document.querySelector('.hide-company-info').addEventListener('click', function () {
+
+        let companyInfo = document.querySelector('.company-information');
+        let vacancies = companyInfo.querySelector('.company-vacancies')
+
+        while (vacancies.childNodes.length > 2) {
+            vacancies.removeChild(vacancies.lastChild);
+            console.log("NODA ", vacancies.childNodes.length)
+        }
+
+        companyInfo.style.display = 'none';
+
+        document.querySelector('.getInformationAboutCompany').disabled = false
+
+    })
+
+</script>
+<script type="text/javascript" th:src="@{/js/account.js}"></script>
+<script type="text/javascript" th:src="@{/js/vacancy.js}"></script>
+<script type="text/javascript" th:src="@{/js/jquery.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/bootstrap.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/owl.carousel.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/bootsnav.js}"></script>
+<script type="text/javascript" th:src="@{/js/main.js}"></script>
+</body>
+</html>
